@@ -1,53 +1,40 @@
-def moyenne(X) -> float:
-    """
-    Calcule la moyenne d'une séquence de nombres.
-    
-    Paramètres:
-    X (sequence of numbers): La séquence de nombres.
-    
-    Retourne:
-    float: La moyenne des nombres dans la séquence.
-    """
-    return sum(X) / len(X)
-
-# Exemple d'utilisation
-print(moyenne([1, 2, 3, 4]))  # Devrait afficher 2.5
-
-def variance(X) -> float:
-    """
-    Calcule la variance d'une séquence de nombres.
-    
-    Paramètres:
-    X (sequence of numbers): La séquence de nombres.
-    
-    Retourne:
-    float: La variance des nombres dans la séquence.
-    """
-    mean = moyenne(X)
-    return sum((x - mean) ** 2 for x in X) / len(X)
-
-# Exemple d'utilisation
-print(variance([1, 2, 3, 4]))  # Devrait afficher 1.25
+"""Partie I — Fonctions utilitaires (Q1 à Q3)."""
 
 import numbers
 
+
+def moyenne(X) -> float:
+    """Q1. Moyenne d'une séquence de nombres (X n'est pas modifiée)."""
+    if len(X) == 0:
+        raise ValueError("moyenne d'une séquence vide")
+    total = 0.0
+    for x in X:
+        total += x
+    return total / len(X)
+
+
+def variance(X) -> float:
+    """Q2. Variance d'une séquence : moyenne des carrés des écarts à la moyenne.
+
+    On utilise la définition « écarts à la moyenne » plutôt que
+    « moyenne des carrés - carré de la moyenne », numériquement plus stable
+    (pas de soustraction de deux grands nombres voisins).
+    """
+    m = moyenne(X)
+    return moyenne([(x - m) ** 2 for x in X])
+
+
 def somme(M):
-    """
-    Calcule la somme de tous les éléments d'une séquence imbriquée.
-    
-    Paramètres:
-    M (sequence): Séquence imbriquée de profondeur et de structure quelconques.
-    
-    Retourne:
-    float: La somme de tous les éléments numériques dans la séquence.
-    """
+    """Q3. Somme de tous les nombres d'une séquence imbriquée quelconque (récursif)."""
+    if isinstance(M, numbers.Real):
+        return M
     total = 0
     for element in M:
-        if isinstance(element, numbers.Real):
-            total += element
-        else:
-            total += somme(element)
+        total += somme(element)
     return total
 
-# Exemple d'utilisation
-print(somme([[[1, 2], [3, 4, 5]], 6, [7, 8], 9]))  # Devrait afficher 45
+
+if __name__ == "__main__":
+    print(moyenne([1, 2, 3, 4]))                     # 2.5
+    print(variance([1, 2, 3, 4]))                    # 1.25
+    print(somme([[[1, 2], [3, 4, 5]], 6, [7, 8], 9]))  # 45
